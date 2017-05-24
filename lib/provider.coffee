@@ -78,8 +78,8 @@ module.exports =
     internalReplacementPrefix: internalPrefix
     displayText: property
     internalSnippet: "#{property}=\"${0}\""
-    description: "" # 描述暂时为空
-    descriptionMoreURL: "" # 这里估计要链接到 weex site
+    description: "Weex Tags Property for '#{property}'."
+    # descriptionMoreURL: "" # 这里估计要链接到 weex site
 
   buildTagCompletion: (tag, prefix, internalPrefix) ->
     result =
@@ -137,7 +137,6 @@ module.exports =
     @calculateLookBackAndLookAhead request
     completions = null
     scopes = request.scopeDescriptor.getScopesArray()
-    console.log scopes
     if hasScope scopes, "string.quoted.double.html"
       # 属性值
     else if hasScope scopes, "meta.tag"
@@ -147,6 +146,8 @@ module.exports =
         completions = @getWeexTagNameCompletions request
       else if hasScope scopes, "punctuation.definition.tag.html" # 临界点
         completions = @aroundPunctuation request
+      else if (hasScope scopes, "punctuation.definition.tag.html.end") and @lookBack == '>' # 临界点
+        completions = null
       else
         completions = @getWeexTagPropertyNameCompletions request
     else
